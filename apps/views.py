@@ -44,11 +44,9 @@ q2 = Region.objects.filter(id__lt=12)  1-11
 Region.objects.all()
 
 
-
 Category
 Product
 Cart
 Wishlist
-
 
 '''

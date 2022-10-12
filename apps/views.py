@@ -9,7 +9,7 @@ from apps.models import Region, District
 def index(request):
     regions = Region.objects.all()
     LogEntry.objects.all()
-    District.objects.filter(user_id__in=Subquery(Region.objects.values('id')))
+    District.objects.filter(region_id__in=Subquery(Region.objects.values('id')))
     District.objects.filter(region__name='Toshkent shahar')
     return HttpResponse('Hello, world')
 

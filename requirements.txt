@@ -8,6 +8,7 @@ et-xmlfile==1.1.0
 MarkupPy==1.14
 odfpy==1.4.1
 openpyxl==3.0.10
+psycopg2-binary==2.9.4
 PyYAML==6.0
 sqlparse==0.4.3
 tablib==3.2.1

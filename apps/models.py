@@ -1,8 +1,10 @@
-from django.db.models import (Model, CharField, FloatField, ForeignKey, CASCADE, IntegerField, SlugField)
+from django.db.models import (Model, CharField, FloatField, ForeignKey, CASCADE, IntegerField, SlugField, UUIDField)
 from django.utils.text import slugify
+import uuid
 
 
 class Region(Model):
+    id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = CharField(max_length=255)
 
     def __str__(self):

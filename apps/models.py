@@ -1,10 +1,10 @@
-from django.db.models import (Model, CharField, FloatField, ForeignKey, CASCADE, IntegerField, SlugField, UUIDField)
+from django.db.models import (Model, CharField, FloatField, ForeignKey, CASCADE, IntegerField, SlugField, UUIDField,
+                              ImageField)
 from django.utils.text import slugify
 import uuid
 
 
 class Region(Model):
-    id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = CharField(max_length=255)
 
     def __str__(self):
@@ -56,3 +56,13 @@ class Cart(Model):
 class Wishlist(Model):
     product = ForeignKey('Product', CASCADE)
     user = ForeignKey('auth.User', CASCADE)
+
+
+class Contact(Model):
+    first_name = CharField(max_length=255)
+    last_name = CharField(max_length=255)
+    email = CharField(max_length=255)
+    phone = CharField(max_length=25)
+    image = ImageField(upload_to='contacts/%Y/%m/%d')
+    position = CharField(max_length=255)
+    address = CharField(max_length=255)

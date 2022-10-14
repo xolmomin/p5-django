@@ -6,17 +6,60 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.admin.templatetags.log import AdminLogNode
 from django.db.models import Q, Subquery, F
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-from apps.models import Region, District, Product, Category
+from apps import forms
+from apps.models import Region, District, Product, Category, Contact
 
 
 def index_page(request):
-    return render(request, 'apps/index.html')
+    contacts = Contact.objects.all()
+    context = {
+        'contacts': contacts
+    }
+    return render(request, 'apps/index.html', context)
 
 
-def about_page(request):
-    return render(request, 'apps/about.html')
+def form_page(request):
+    if request.method == 'POST':
+
+        contact_form = forms.ContactForm(request.POST, request.FILES)
+        contact_form.save()
+
+        return redirect('index_page')
+
+        # contact_form = forms.ContactForm(request.POST)
+        # contact_form.is_valid()
+        # contact = Contact(**contact_form.cleaned_data)
+        # contact.save()
+        # print(1)
+
+
+        # data = request.POST.dict()
+        # data.pop('encoding')
+        # data.pop('__len__')
+        # data.pop('csrfmiddlewaretoken')
+        # contact = Contact(**data)
+        # contact.save()
+
+
+        # first_name = request.POST.get('first_name')
+        # last_name = request.POST.get('last_name')
+        # email = request.POST.get('email')
+        # phone = request.POST.get('phone')
+        # position = request.POST.get('position')
+        # address = request.POST.get('address')
+        # contact = Contact(
+        #     first_name=first_name,
+        #     last_name=last_name,
+        #     email=email,
+        #     phone=phone,
+        #     position=position,
+        #     address=address
+        # )
+        # contact.save()
+
+    return render(request, 'apps/form.html')
 
 
 # gte, gt, lt, lte

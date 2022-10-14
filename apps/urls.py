@@ -1,9 +1,8 @@
 from django.urls import path
-from django.views.decorators.csrf import csrf_exempt
 
-from .views import index_page, about_page
+from .views import index_page, form_page
 
 urlpatterns = [
-    path('', index_page),
-    path('about', about_page)
+    path('', index_page, name='index_page'),
+    path('form-create', form_page, name='form_page')
 ]

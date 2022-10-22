@@ -1,17 +1,12 @@
-from http import HTTPStatus
-from random import random, choices, randint, choice
-
-from django.contrib.admin import ModelAdmin
-from django.contrib.admin.models import LogEntry
-from django.contrib.admin.templatetags.log import AdminLogNode
-from django.contrib.auth.forms import UserCreationForm
-from django.db.models import Q, Subquery, F
-from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 
 from apps import forms
-from apps.forms import CustomUserCreationForm
-from apps.models import Region, District, Product, Category, Contact
+from apps.forms import CustomUserCreationForm, LoginForm
+from apps.models import Contact
+from root.settings import EMAIL_HOST_USER
 
 
 def index_page(request):
@@ -23,7 +18,40 @@ def index_page(request):
 
 
 def login_page(request):
-    return render(request, 'apps/auth/login.html')
+    if request.user.is_authenticated:
+        return redirect('index')
+
+    if request.method == 'POST':
+        forms = LoginForm(request.POST)
+        if forms.is_valid():
+            username = forms.cleaned_data['username']
+            password = forms.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('index')
+    forms = LoginForm()
+    context = {
+        'forms': forms
+    }
+    return render(request, 'apps/auth/login.html', context)
+
+
+def logout_page(request):
+    logout(request)
+    return redirect('login_page')
+
+
+def send_information_message(email: str):
+    token = '432432'
+    context = {
+        'token': token
+    }
+    html_content = render_to_string('apps/email/notification.html', context)
+    email = EmailMessage('subject', html_content, EMAIL_HOST_USER, [email], )
+    email.content_subtype = 'html'
+    response = email.send()
+    print(response)
+
 
 
 def register_page(request):
@@ -33,6 +61,8 @@ def register_page(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            email = form.cleaned_data['email']
+            send_information_message(email)
             return redirect('index')
 
     context = {

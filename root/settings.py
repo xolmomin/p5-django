@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     # My apps
     'apps',
 
-
     # Third-party apps
     'import_export',
+    'django_celery_results'
 ]
 
 MIDDLEWARE = [
@@ -130,3 +130,21 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# celery setting.
+CELERY_CACHE_BACKEND = 'default'
+
+# django setting.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
+    }
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ganiyevuzb@gmail.com'
+EMAIL_HOST_PASSWORD = 'szxwbqxcbcyezdzd'

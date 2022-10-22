@@ -62,8 +62,23 @@
 
                 <h1>Clean-Note </h1>
                 <h3>Login Page</h3>
+                {% if user.is_authenticated %}
+                    Xush kelibsiz {{ user.username }}
+                {% endif %}
+
+                {% if forms.errors %}
+                    {% for field in forms %}
+                        {% if field.errors %}
+                            <div class="fieldWrapper" style="color: red;">
+                                {{ field.label_tag }}
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
 
                 <form role="form" method="post" action="{% url 'login_page' %}" class="frm  animated fadeInRight">
+                    {% csrf_token %}
                     <div class="form-content">
                         <div class="form-group">
                             <input type="text" class="form-control input-underline input-lg" name="username"

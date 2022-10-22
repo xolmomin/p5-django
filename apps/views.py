@@ -4,11 +4,13 @@ from random import random, choices, randint, choice
 from django.contrib.admin import ModelAdmin
 from django.contrib.admin.models import LogEntry
 from django.contrib.admin.templatetags.log import AdminLogNode
+from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q, Subquery, F
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from apps import forms
+from apps.forms import CustomUserCreationForm
 from apps.models import Region, District, Product, Category, Contact
 
 
@@ -20,9 +22,27 @@ def index_page(request):
     return render(request, 'apps/index.html', context)
 
 
+def login_page(request):
+    return render(request, 'apps/auth/login.html')
+
+
+def register_page(request):
+    form = CustomUserCreationForm()
+
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+
+    context = {
+        'forms': form
+    }
+    return render(request, 'apps/auth/register.html', context)
+
+
 def form_page(request):
     if request.method == 'POST':
-
         contact_form = forms.ContactForm(request.POST, request.FILES)
         contact_form.save()
 
@@ -34,14 +54,12 @@ def form_page(request):
         # contact.save()
         # print(1)
 
-
         # data = request.POST.dict()
         # data.pop('encoding')
         # data.pop('__len__')
         # data.pop('csrfmiddlewaretoken')
         # contact = Contact(**data)
         # contact.save()
-
 
         # first_name = request.POST.get('first_name')
         # last_name = request.POST.get('last_name')
